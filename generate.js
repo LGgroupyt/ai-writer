@@ -1,5 +1,5 @@
 // netlify/functions/generate.js
-// Secure Claude API proxy with server-side rate limiting
+// Secure Gemini API proxy with server-side rate limiting
 
 const MAX_FREE = 5;
 const RATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -43,8 +43,7 @@ function validateInput(tool, topic, lang, extra) {
   if (!topic || typeof topic !== "string") throw new Error("Topic is required");
   if (topic.length > 500) throw new Error("Topic too long (max 500 chars)");
   if (extra && extra.length > 200) throw new Error("Extra options too long");
-  const sanitized = topic.replace(/\n{3,}/g, "\n\n").trim();
-  return sanitized;
+  return topic.replace(/\n{3,}/g, "\n\n").trim();
 }
 
 function buildPrompt(tool, topic, lang, extra) {
@@ -148,29 +147,30 @@ exports.handler = async (event) => {
 
   const prompt = buildPrompt(tool, cleanTopic, lang, extra);
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: "Server configuration error" }) };
   }
 
   try {
-    const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            maxOutputTokens: 1000,
+            temperature: 0.7,
+          },
+        }),
+      }
+    );
 
-    if (!claudeRes.ok) {
-      const errText = await claudeRes.text();
-      console.error("Claude API error:", claudeRes.status, errText);
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      console.error("Gemini API error:", geminiRes.status, errText);
       return {
         statusCode: 502,
         headers,
@@ -178,8 +178,8 @@ exports.handler = async (event) => {
       };
     }
 
-    const data = await claudeRes.json();
-    const text = data.content?.map((b) => b.text || "").join("") || "";
+    const data = await geminiRes.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
     return {
       statusCode: 200,
