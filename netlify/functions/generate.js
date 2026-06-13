@@ -67,33 +67,35 @@ Requirements:
   };
 
   const prompt = prompts[tool] || prompts.whatsapp;
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: "Server configuration error" }) };
   }
 
   try {
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { maxOutputTokens: 1000, temperature: 0.7 },
-        }),
-      }
-    );
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 1000,
+        temperature: 0.7,
+      }),
+    });
 
-    if (!geminiRes.ok) {
-      const errText = await geminiRes.text();
-      console.error("Gemini error:", geminiRes.status, errText);
+    if (!groqRes.ok) {
+      const errText = await groqRes.text();
+      console.error("Groq error:", groqRes.status, errText);
       return { statusCode: 502, headers, body: JSON.stringify({ error: "AI service error. Please try again." }) };
     }
 
-    const data = await geminiRes.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const data = await groqRes.json();
+    const text = data.choices?.[0]?.message?.content || "";
 
     return {
       statusCode: 200,
