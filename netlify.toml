@@ -1,11 +1,7 @@
 [build]
-  publish = "public"
-  functions = "netlify/functions"
+  publish = "."
+  functions = "."
 
-[functions]
-  node_bundler = "esbuild"
-
-# Redirect /api/* to the function
 [[redirects]]
   from = "/api/generate"
   to = "/.netlify/functions/generate"
