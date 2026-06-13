@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Writer — Tamil & English | Free AI Tool for Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-dark: #0F6E56;
+    --amber: #EF9F27;
+    --red: #E24B4A;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--green);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .upgrade-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .upgrade-btn:hover { background: var(--green-dark); }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .hero h1 span { color: var(--green); }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  /* USAGE BAR */
+  .usage-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .usage-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .usage-track {
+    width: 160px;
+    height: 7px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .usage-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--green);
+    transition: width 0.4s, background 0.4s;
+  }
+
+  /* MAIN APP */
+  .app-wrap {
+    max-width: 680px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
+  }
+
+  .app-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+    background: var(--green-light);
+  }
+
+  .tab:hover:not(.active) { background: var(--bg); }
+  .tab-icon { margin-right: 6px; }
+
+  /* PANEL */
+  .panel { display: none; padding: 1.5rem; }
+  .panel.active { display: block; }
+
+  /* LANG TOGGLE */
+  .lang-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .lang-row label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-right: 4px;
+    align-self: center;
+  }
+
+  .lang-btn {
+    padding: 5px 14px;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .lang-btn.active {
+    background: var(--green-light);
+    color: var(--green-dark);
+    border-color: var(--green);
+    font-weight: 500;
+  }
+
+  /* FORM */
+  .field { margin-bottom: 1rem; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  textarea, select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--text);
+    transition: border 0.15s;
+    resize: vertical;
+  }
+
+  textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(29,158,117,0.1);
+  }
+
+  /* GENERATE BUTTON */
+  .gen-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 4px;
+  }
+
+  .gen-btn:hover { background: var(--green-dark); }
+  .gen-btn:active { transform: scale(0.99); }
+  .gen-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+  /* OUTPUT */
+  .output-wrap { margin-top: 1.25rem; display: none; }
+
+  .output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .output-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .copy-btn {
+    font-size: 12px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover { background: var(--bg); color: var(--text); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  .output-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    min-height: 80px;
+  }
+
+  /* SPINNER */
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* UPGRADE MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    animation: popIn 0.2s ease;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 24px;
+  }
+
+  .modal-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+
+  .modal-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .price-tag { font-size: 2rem; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+  .price-note { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+
+  .modal-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .modal-features li::before { content: '✓  '; color: var(--green); font-weight: 600; }
+
+  .pay-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background 0.15s;
+  }
+
+  .pay-btn:hover { background: var(--green-dark); }
+
+  .modal-close {
+    font-size: 13px;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* FEATURES */
+  .features {
+    max-width: 680px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .feature-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+
+  .feature-icon { font-size: 24px; margin-bottom: 10px; }
+  .feature-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .feature-card p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+
+  /* MOBILE */
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 1.5rem; }
+    .tab { min-width: 100px; padding: 12px 8px; font-size: 12px; }
+    .panel { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <a class="logo" href="#">
+    <div class="logo-icon">✦</div>
+    AI Writer
+  </a>
+  <div class="header-right">
+    <button class="upgrade-btn" onclick="showUpgrade()">⚡ Upgrade — ₹299/mo</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🇮🇳 Made for Indian businesses</div>
+  <h1>Write better content in<br><span>Tamil & English</span> using AI</h1>
+  <p>WhatsApp messages, Instagram captions, and product descriptions — generated in seconds. Free to try, no login needed.</p>
+  <div class="usage-strip">
+    <span class="usage-label" id="usageLabelTop">5 free uses left today</span>
+    <div class="usage-track">
+      <div class="usage-fill" id="usageFillTop" style="width:100%"></div>
+    </div>
+  </div>
+</section>
+
+<!-- APP -->
+<div class="app-wrap">
+  <div class="app-card">
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('whatsapp', this)">
+        <span class="tab-icon">💬</span>WhatsApp
+      </button>
+      <button class="tab" onclick="switchTab('instagram', this)">
+        <span class="tab-icon">📸</span>Instagram
+      </button>
+      <button class="tab" onclick="switchTab('product', this)">
+        <span class="tab-icon">🏷️</span>Product desc
+      </button>
+    </div>
+
+    <!-- WHATSAPP PANEL -->
+    <div class="panel active" id="panelWhatsapp">
+      <div class="lang-row">
+        <label>Language:</label>
+        <button class="lang-btn active" onclick="setLang('whatsapp','tamil',this)">Tamil</button>
+        <button class="lang-btn" onclick="setLang('whatsapp','english',this)">English</button>
+        <button class="lang-btn" onclick="setLang('whatsapp','both',this)">Both</button>
+      </div>
+      <div class="field">
+        <label>What is your message about?</label>
+        <textarea id="wa-topic" rows="3" placeholder="e.g. Diwali sale — 40% off on all products, valid till Sunday only. Shop name: Sri Murugan Textiles"></textarea>
+      </div>
+      <div class="field">
+        <label>Tone</label>
+        <select id="wa-tone">
+          <option>Friendly & casual</option>
+          <option>Professional</option>
+          <option>Urgent / promotional</option>
+          <option>Festive & celebratory</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="wa-btn" onclick="generate('whatsapp')">
+        ✦ Generate WhatsApp message
+      </button>
+      <div class="output-wrap" id="wa-out-wrap">
+        <div class="output-header">
+          <span class="output-label">Your message</span>
+          <button class="copy-btn" id="wa-copy" onclick="copyText('wa-output', 'wa-copy')">Copy</button>
+        </div>
+        <div class="output-box" id="wa-output"></div>
+      </div>
+    </div>
+
+    <!-- INSTAGRAM PANEL -->
+    <div class="panel" id="panelInstagram">
+      <div class="lang-row">
+        <label>Language:</label>
+        <button class="lang-btn active" onclick="setLang('instagram','tamil',this)">Tamil</button>
+        <button class="lang-btn" onclick="setLang('instagram','english',this)">English</button>
+        <button class="lang-btn" onclick="setLang('instagram','both',this)">Both</button>
+      </div>
+      <div class="field">
+        <label>What is your post about?</label>
+        <textarea id="ig-topic" rows="3" placeholder="e.g. New arrival — silk sarees from Kanchipuram, starting ₹1499. Available in 20 colors"></textarea>
+      </div>
+      <div class="field">
+        <label>Hashtags</label>
+        <select id="ig-hashtag">
+          <option>Yes — include relevant hashtags</option>
+          <option>No hashtags</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Post style</label>
+        <select id="ig-style">
+          <option>Product launch</option>
+          <option>Sale announcement</option>
+          <option>Behind the scenes</option>
+          <option>Customer testimonial</option>
+          <option>Festive / seasonal</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="ig-btn" onclick="generate('instagram')">
+        ✦ Generate Instagram caption
+      </button>
+      <div class="output-wrap" id="ig-out-wrap">
+        <div class="output-header">
+          <span class="output-label">Your caption</span>
+          <button class="copy-btn" id="ig-copy" onclick="copyText('ig-output', 'ig-copy')">Copy</button>
+        </div>
+        <div class="output-box" id="ig-output"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT DESC PANEL -->
+    <div class="panel" id="panelProduct">
+      <div class="lang-row">
+        <label>Language:</label>
+        <button class="lang-btn active" onclick="setLang('product','tamil',this)">Tamil</button>
+        <button class="lang-btn" onclick="setLang('product','english',this)">English</button>
+        <button class="lang-btn" onclick="setLang('product','both',this)">Both</button>
+      </div>
+      <div class="field">
+        <label>Product name & details</label>
+        <textarea id="pd-topic" rows="3" placeholder="e.g. Pure cotton kurti, blue floral print, sizes S to XXL, price ₹599, machine washable"></textarea>
+      </div>
+      <div class="field">
+        <label>Platform</label>
+        <select id="pd-platform">
+          <option>My website / Zoho store</option>
+          <option>Meesho</option>
+          <option>Amazon / Flipkart</option>
+          <option>Instagram shop</option>
+          <option>WhatsApp catalogue</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Description length</label>
+        <select id="pd-length">
+          <option>Short (2–3 lines)</option>
+          <option>Medium (5–7 lines with bullet points)</option>
+          <option>Long (full SEO description)</option>
+        </select>
+      </div>
+      <button class="gen-btn" id="pd-btn" onclick="generate('product')">
+        ✦ Generate product description
+      </button>
+      <div class="output-wrap" id="pd-out-wrap">
+        <div class="output-header">
+          <span class="output-label">Your description</span>
+          <button class="copy-btn" id="pd-copy" onclick="copyText('pd-output', 'pd-copy')">Copy</button>
+        </div>
+        <div class="output-box" id="pd-output"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="feature-card">
+    <div class="feature-icon">🌐</div>
+    <h3>Tamil & English</h3>
+    <p>Write in Tamil, English, or both — perfect for South Indian businesses.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">⚡</div>
+    <h3>Instant results</h3>
+    <p>Get professional content in seconds. No writing skills needed.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🎯</div>
+    <h3>3 tools in one</h3>
+    <p>WhatsApp, Instagram captions, and product descriptions all in one place.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🆓</div>
+    <h3>Free to start</h3>
+    <p>5 free generations daily. Upgrade for unlimited access at ₹299/month.</p>
+  </div>
+</div>
+
+<!-- UPGRADE MODAL -->
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal-card">
+    <div class="modal-icon">⚡</div>
+    <h2>Upgrade to premium</h2>
+    <p>You've used all 5 free generations for today. Get unlimited access with premium.</p>
+    <div class="price-tag">₹299</div>
+    <div class="price-note">per month · cancel anytime</div>
+    <ul class="modal-features">
+      <li>Unlimited AI generations</li>
+      <li>All 3 tools unlocked</li>
+      <li>Tamil + English support</li>
+      <li>No ads, no limits</li>
+      <li>WhatsApp support</li>
+    </ul>
+    <button class="pay-btn" onclick="handlePayment()">Pay ₹299/month via Razorpay</button>
+    <button class="modal-close" onclick="closeUpgrade()">Maybe later</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>AI Writer — Tamil & English · Free AI tool for Indian businesses · Powered by Claude AI</p>
+  <p style="margin-top:6px;">© 2026 · Contact: your@email.com · WhatsApp: +91 XXXXXXXXXX</p>
+</footer>
+
+<script>
+  // ─── Usage tracking (UI only — real limit enforced server-side) ───────────
+  const MAX_FREE = 5;
+  const STORAGE_KEY = 'aiwriter_used_' + new Date().toDateString();
+
+  // usedCount is just for the UI bar; server tracks the real limit
+  let usedCount = parseInt(localStorage.getItem(STORAGE_KEY) || '0');
+  const langs = { whatsapp: 'tamil', instagram: 'tamil', product: 'tamil' };
+
+  function updateUsage(remaining) {
+    // If server tells us remaining, trust that; else derive from local count
+    const left = remaining !== undefined ? remaining : Math.max(0, MAX_FREE - usedCount);
+    const pct = (left / MAX_FREE) * 100;
+    const fill = document.getElementById('usageFillTop');
+    const label = document.getElementById('usageLabelTop');
+    if (fill) {
+      fill.style.width = pct + '%';
+      fill.style.background = pct <= 20 ? '#E24B4A' : pct <= 60 ? '#EF9F27' : '#1D9E75';
+    }
+    if (label) {
+      label.textContent = left > 0
+        ? left + ' free use' + (left === 1 ? '' : 's') + ' left today'
+        : 'Free limit reached — upgrade for unlimited';
+    }
+  }
+
+  // ─── Tab & language helpers ───────────────────────────────────────────────
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    const panelMap = { whatsapp: 'panelWhatsapp', instagram: 'panelInstagram', product: 'panelProduct' };
+    document.getElementById(panelMap[tab]).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function setLang(tool, lang, btn) {
+    langs[tool] = lang;
+    btn.closest('.lang-row').querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function copyText(outputId, btnId) {
+    const text = document.getElementById(outputId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById(btnId);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ─── Modal ────────────────────────────────────────────────────────────────
+  function showUpgrade() { document.getElementById('upgradeModal').classList.add('show'); }
+  function closeUpgrade() { document.getElementById('upgradeModal').classList.remove('show'); }
+
+  function handlePayment() {
+    // Replace with your Razorpay payment link
+    alert('Connect your Razorpay payment link here!\n\nSteps:\n1. Go to razorpay.com\n2. Create a ₹299/month subscription plan\n3. Replace this alert with: window.open("YOUR_RAZORPAY_LINK")');
+  }
+
+  // ─── Generate ─────────────────────────────────────────────────────────────
+  async function generate(tool) {
+    // Optimistic client-side check (real check is server-side)
+    if (usedCount >= MAX_FREE) { showUpgrade(); return; }
+
+    const config = {
+      whatsapp: { btn: 'wa-btn', out: 'wa-output', wrap: 'wa-out-wrap' },
+      instagram: { btn: 'ig-btn', out: 'ig-output', wrap: 'ig-out-wrap' },
+      product:   { btn: 'pd-btn', out: 'pd-output', wrap: 'pd-out-wrap' }
+    };
+
+    const { btn: btnId, out: outId, wrap: wrapId } = config[tool];
+    const btn = document.getElementById(btnId);
+    const outBox = document.getElementById(outId);
+    const wrap = document.getElementById(wrapId);
+
+    // Collect inputs
+    let topic = '', extra = '';
+    if (tool === 'whatsapp') {
+      topic = document.getElementById('wa-topic').value.trim();
+      extra = 'Tone: ' + document.getElementById('wa-tone').value;
+    } else if (tool === 'instagram') {
+      topic = document.getElementById('ig-topic').value.trim();
+      extra = document.getElementById('ig-hashtag').value + '. Style: ' + document.getElementById('ig-style').value;
+    } else {
+      topic = document.getElementById('pd-topic').value.trim();
+      extra = 'Platform: ' + document.getElementById('pd-platform').value + '. Length: ' + document.getElementById('pd-length').value;
+    }
+
+    if (!topic) { alert('Please enter some details first!'); return; }
+
+    // Loading state
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Generating...';
+    wrap.style.display = 'block';
+    outBox.textContent = '';
+
+    try {
+      // ✅ Calls our Netlify Function — API key never touches the browser
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tool,
+          topic,
+          lang: langs[tool],
+          extra
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.status === 429) {
+        // Server says rate limited
+        outBox.textContent = '';
+        wrap.style.display = 'none';
+        showUpgrade();
+        updateUsage(0);
+        return;
+      }
+
+      if (!res.ok || data.error) {
+        outBox.textContent = '⚠️ ' + (data.error || 'Something went wrong. Please try again.');
+        return;
+      }
+
+      outBox.textContent = data.text;
+
+      // Update local count & usage bar from server's remaining count
+      usedCount++;
+      localStorage.setItem(STORAGE_KEY, usedCount);
+      updateUsage(data.remaining);
+
+      if (data.remaining === 0) {
+        setTimeout(showUpgrade, 1500);
+      }
+
+    } catch (e) {
+      outBox.textContent = '⚠️ Could not connect. Please check your internet and try again.';
+    } finally {
+      btn.disabled = false;
+      const icons = { whatsapp: '💬', instagram: '📸', product: '🏷️' };
+      btn.innerHTML = icons[tool] + ' Generate again';
+    }
+  }
+
+  // Init
+  updateUsage();
+</script>
+</body>
+</html>
